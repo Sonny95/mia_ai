@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import axios from "axios";
 
@@ -7,32 +7,11 @@ function App() {
   const [inputText, setInputText] = useState("");
   //ai
   const [response, setResponse] = useState("");
-  const [assistantId, setAssistantId] = useState("");
-  const [threadId, setThreadId] = useState("");
-
-  //assisstant id and thread id
-  useEffect(() => {
-    fetchAssistantAndThreadId();
-  }, []);
-
-  // get assisant id and thread id
-  const fetchAssistantAndThreadId = async () => {
-    try {
-      const res = await axios.get("http://localhost:8000/init");
-      const { assistantId, threadId } = res.data;
-      setAssistantId(assistantId);
-      setThreadId(threadId);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
 
   const sendMessage = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/ai", {
+      const res = await axios.post("/api/openai", {
         message: inputText,
-        assistantId: assistantId,
-        threadId: threadId,
       });
       setResponse(res.data);
       console.log(res, "setResponse");
@@ -50,6 +29,7 @@ function App() {
 
         <div className="bg-gray-600 rounded-lg h-14 mt-auto justify-between flex items-center">
           <input
+            id="userText"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Message Mia..."
